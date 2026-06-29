@@ -634,7 +634,7 @@ memory.set(userId, updatedHistory.slice(-20)); // keep last 20 messages
   }
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[Deadline Guardian Server] Running on http://localhost:${PORT}`);
+    console.log(`[Deadline Guardian Server] Running on port ${PORT}`);
   });
 }
 
