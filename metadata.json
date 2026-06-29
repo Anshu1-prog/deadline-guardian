@@ -1,0 +1,6 @@
+{
+  "name": "Deadline Guardian AI",
+  "description": "Your AI-powered Task & Deadline Planner with automated scheduling, smart plan generation, and comprehensive workload insights.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
