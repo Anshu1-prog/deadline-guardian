@@ -9,7 +9,7 @@ dotenv.config();
 const memory = new Map<string, any[]>();
 
 const isProduction = process.env.NODE_ENV === "production";
-const PORT = 3000;
+const PORT = process.env.PORT || 8080;
 
 // Lazy initialize Gemini client safely
 let aiClient: GoogleGenAI | null = null;
