@@ -23,6 +23,10 @@ import { createCalendarEvent, sendGmailReminder } from "../utils/workspace";
 import DeadlineSimulator from "./DeadlineSimulator";
 import { generatePlan } from "../services/apiService";
 
+const getDaysInMonth = (year: number, month: number) => {
+  return new Date(year, month, 0).getDate();
+};
+
 interface AIPlannerViewProps {
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
@@ -782,10 +786,21 @@ export default function AIPlannerView({
                     value={deadline.split("-")[1] || "06"}
                     aria-label="Deadline Month"
                     onChange={(e) => {
-                      const parts = deadline.split("-");
-                      parts[1] = e.target.value;
-                      setDeadline(parts.join("-"));
-                    }}
+  const parts = deadline.split("-");
+
+  parts[1] = e.target.value;
+
+  const maxDays = getDaysInMonth(
+    Number(parts[0]),
+    Number(parts[1])
+  );
+
+  if (Number(parts[2]) > maxDays) {
+    parts[2] = String(maxDays).padStart(2, "0");
+  }
+
+  setDeadline(parts.join("-"));
+}}
                     className="flex-1 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1.5 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer"
                   >
                     <option className="text-black bg-white" value="01">Jan</option>
@@ -811,19 +826,44 @@ export default function AIPlannerView({
                     }}
                     className="w-14 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer text-center"
                   >
-                    {Array.from({ length: 31 }, (_, i) => {
-                      const dVal = (i + 1).toString().padStart(2, "0");
-                      return <option className="text-black bg-white" key={dVal} value={dVal}>{dVal}</option>;
-                    })}
+                    {(() => {
+  const [year, month] = deadline.split("-").map(Number);
+  const maxDays = getDaysInMonth(year, month);
+
+  return Array.from({ length: maxDays }, (_, i) => {
+    const dVal = (i + 1).toString().padStart(2, "0");
+
+    return (
+      <option
+        className="text-black bg-white"
+        key={dVal}
+        value={dVal}
+      >
+        {dVal}
+      </option>
+    );
+  });
+})()}
                   </select>
                   <select
                     value={deadline.split("-")[0] || "2026"}
                     aria-label="Deadline Year"
                     onChange={(e) => {
-                      const parts = deadline.split("-");
-                      parts[0] = e.target.value;
-                      setDeadline(parts.join("-"));
-                    }}
+  const parts = deadline.split("-");
+
+  parts[0] = e.target.value;
+
+  const maxDays = getDaysInMonth(
+    Number(parts[0]),
+    Number(parts[1])
+  );
+
+  if (Number(parts[2]) > maxDays) {
+    parts[2] = String(maxDays).padStart(2, "0");
+  }
+
+  setDeadline(parts.join("-"));
+}}
                     className="w-16 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer text-center"
                   >
                     <option className="text-black bg-white" value="2026">2026</option>
@@ -831,32 +871,8 @@ export default function AIPlannerView({
                     <option className="text-black bg-white" value="2028">2028</option>
                   </select>
                 </div>
-                
-                {/* Micro presets below */}
-                <div className="flex flex-wrap gap-1 mt-1 pb-1">
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-06-25")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-06-25" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jun 25
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-06-30")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-06-30" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jun 30
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-07-15")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-07-15" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jul 15
-                  </button>
-                </div>
-              </div>
+              </div>   
+            
 
               {/* Tone style */}
               <div className="space-y-1.5">

@@ -15,7 +15,6 @@ import {
   LogOut
 } from "lucide-react";
 import { UserProfile, Task, AIPlan } from "../types";
-import { INITIAL_TASKS, INITIAL_PLAN, INITIAL_PROFILE } from "../utils/dataStore";
 import { googleSignIn, logout } from "../utils/workspace";
 
 interface SettingsViewProps {
@@ -91,17 +90,7 @@ export default function SettingsView({
   };
 
   // Reload standard default items to showcase app features
-  const handleLoadDemo = () => {
-    setTasks(INITIAL_TASKS);
-    setActivePlan(INITIAL_PLAN);
-    setAllPlans([INITIAL_PLAN]);
-    setProfile(INITIAL_PROFILE);
-    setName(INITIAL_PROFILE.name);
-    setFocusGoal(INITIAL_PROFILE.focusScore);
-    setDailyHours(INITIAL_PROFILE.dailyWorkHours);
-    setConfirmDemoOpen(false);
-    triggerToast("Showcase demo datasets successfully loaded.");
-  };
+  
 
   return (
     <div className="flex-1 p-8 text-white min-h-screen bg-[#090b1e]/95 pb-16 overflow-y-auto">

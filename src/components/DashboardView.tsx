@@ -1039,40 +1039,80 @@ export default function DashboardView({
             </div>
 
             {/* 3. AI INSIGHT OF THE DAY */}
-            <div className="space-y-4">
-              <div className="text-[11px] font-bold text-gray-400 font-mono uppercase tracking-widest flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-pink-500 rounded-full" />
-                AI Insight of the Day
-              </div>
-              <div className="bg-[#12163b]/60 border border-[#1e244b] rounded-3xl p-5 space-y-4 shadow-xl hover:border-pink-500/30 transition-all duration-300 flex flex-col justify-between min-h-[220px]">
-                <div className="space-y-3">
-                  <div className="w-9 h-9 rounded-xl bg-pink-500/10 flex items-center justify-center text-pink-400">
-                    <Sparkles className="w-4.5 h-4.5" />
-                  </div>
-                  <div className="space-y-1.5">
-                    <span className="text-[9px] uppercase font-bold text-pink-400 font-mono tracking-wider">Data Pattern Detected</span>
-                    <p className="text-gray-200 text-[11px] leading-relaxed font-light">
-                      {(() => {
-                        const codingTasks = tasks.filter(t => t.category === "Coding");
-                        const highPriorityTasks = tasks.filter(t => t.priority === "High" && !t.completed);
-                        
-                        if (codingTasks.length > 3) {
-                          return "Pattern analysis suggests you complete your coding sprints much faster in the evenings. Schedule structural algorithm analysis for 6 PM to maximize flow blocks.";
-                        } else if (highPriorityTasks.length > 2) {
-                          return "Today has a heavy concentration of high-priority milestones. We strongly recommend finishing high-leverage deliverables first to avoid critical buffer decay.";
-                        } else {
-                          return "You typically delay DBMS syllabus reviews. Slotting a short 25-minute Pomodoro focus block today will prevent cumulative stress prior to finals.";
-                        }
-                      })()}
-                    </p>
-                  </div>
-                </div>
+            {/* TODAY FOCUS SCORE */}
+<div className="space-y-4">
 
-                <div className="text-[9px] text-gray-500 font-mono border-t border-[#1e244b]/40 pt-3">
-                  Recommendation: Start difficult work first to safeguard deadlines.
-                </div>
-              </div>
+  <div className="text-[11px] font-bold text-gray-400 font-mono uppercase tracking-widest flex items-center gap-1.5">
+    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
+    Today Focus Score
+  </div>
+
+  <div className="bg-[#12163b]/60 border border-[#1e244b] rounded-3xl p-5 shadow-xl min-h-[220px] flex flex-col justify-between">
+
+    {/* Score Calculation */}
+    {(() => {
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed).length;
+      const highPriority = tasks.filter(t => t.priority === "High" && !t.completed).length;
+
+      const score =
+        total === 0
+          ? 0
+          : Math.max(
+              0,
+              Math.round(
+                (completed / total) * 100 -
+                highPriority * 10
+              )
+            );
+
+      return (
+        <>
+          <div className="space-y-3">
+
+            <div className="text-4xl font-bold text-white font-mono">
+              {score}/100
             </div>
+
+            <div className="space-y-2 text-[11px] text-gray-300">
+
+              <div className="flex justify-between">
+                <span>Tasks Completed</span>
+                <span className="text-emerald-400 font-semibold">{completed}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>Total Tasks</span>
+                <span className="text-white font-semibold">{total}</span>
+              </div>
+
+              <div className="flex justify-between">
+                <span>High Priority Pending</span>
+                <span className="text-red-400 font-semibold">{highPriority}</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="mt-4">
+            <div className="h-2 w-full bg-[#090b1e] rounded-full overflow-hidden border border-white/5">
+              <div
+                className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500"
+                style={{ width: `${score}%` }}
+              />
+            </div>
+
+            <div className="text-[9px] text-gray-500 font-mono mt-2">
+              Based on completion rate and priority load
+            </div>
+          </div>
+        </>
+      );
+    })()}
+
+  </div>
+</div>
 
           </div>
 
