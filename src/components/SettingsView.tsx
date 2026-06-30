@@ -319,7 +319,7 @@ export default function SettingsView({
                 className="w-full py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:scale-[1.01] transition-transform text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 cursor-pointer border border-white/5"
               >
                 <RefreshCw className="w-3.5 h-3.5 text-cyan-300" />
-                <span>Showcase Data</span>
+                <span>Showcase Showcase Data</span>
               </button>
             </div>
 
