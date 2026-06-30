@@ -17,8 +17,9 @@ function getGeminiClient(): GoogleGenAI {
   if (!aiClient) {
     const key = process.env.GEMINI_API_KEY;
     if (!key || key === "MY_GEMINI_API_KEY") {
-      throw new Error("GEMINI_API_KEY is not configured or uses placeholder");
-    }
+  console.warn("⚠️ GEMINI_API_KEY missing - AI features disabled");
+  return null as any;
+}
     aiClient = new GoogleGenAI({
       apiKey: key,
       httpOptions: {
