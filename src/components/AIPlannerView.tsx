@@ -774,104 +774,126 @@ export default function AIPlannerView({
 
             {/* Grid for Deadline & Tone */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Deadline */}
-              <div className="space-y-1.5 col-span-1">
-                <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest pl-1 select-none">Target Deadline</label>
-                <div className="flex gap-1">
-                  <select
-                    value={deadline.split("-")[1] || "06"}
-                    aria-label="Deadline Month"
-                    onChange={(e) => {
-                      const parts = deadline.split("-");
-                      parts[1] = e.target.value;
-                      setDeadline(parts.join("-"));
-                    }}
-                    className="flex-1 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1.5 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer"
-                  >
-                    <option className="text-black bg-white" value="01">Jan</option>
-                    <option className="text-black bg-white" value="02">Feb</option>
-                    <option className="text-black bg-white" value="03">Mar</option>
-                    <option className="text-black bg-white" value="04">Apr</option>
-                    <option className="text-black bg-white" value="05">May</option>
-                    <option className="text-black bg-white" value="06">Jun</option>
-                    <option className="text-black bg-white" value="07">Jul</option>
-                    <option className="text-black bg-white" value="08">Aug</option>
-                    <option className="text-black bg-white" value="09">Sep</option>
-                    <option className="text-black bg-white" value="10">Oct</option>
-                    <option className="text-black bg-white" value="11">Nov</option>
-                    <option className="text-black bg-white" value="12">Dec</option>
-                  </select>
-                  <select
-                    value={deadline.split("-")[2] || "30"}
-                    aria-label="Deadline Day"
-                    onChange={(e) => {
-                      const parts = deadline.split("-");
-                      parts[2] = e.target.value;
-                      setDeadline(parts.join("-"));
-                    }}
-                    className="w-14 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer text-center"
-                  >
-                    {Array.from({ length: 31 }, (_, i) => {
-                      const dVal = (i + 1).toString().padStart(2, "0");
-                      return <option className="text-black bg-white" key={dVal} value={dVal}>{dVal}</option>;
-                    })}
-                  </select>
-                  <select
-                    value={deadline.split("-")[0] || "2026"}
-                    aria-label="Deadline Year"
-                    onChange={(e) => {
-                      const parts = deadline.split("-");
-                      parts[0] = e.target.value;
-                      setDeadline(parts.join("-"));
-                    }}
-                    className="w-16 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer text-center"
-                  >
-                    <option className="text-black bg-white" value="2026">2026</option>
-                    <option className="text-black bg-white" value="2027">2027</option>
-                    <option className="text-black bg-white" value="2028">2028</option>
-                  </select>
-                </div>
-                
-                {/* Micro presets below */}
-                <div className="flex flex-wrap gap-1 mt-1 pb-1">
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-06-25")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-06-25" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jun 25
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-06-30")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-06-30" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jun 30
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-07-15")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-07-15" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jul 15
-                  </button>
-                </div>
-              </div>
 
-              {/* Tone style */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest pl-1">Academic Tone</label>
-                <select
-                  value={academicTone}
-                  onChange={(e) => setAcademicTone(e.target.value)}
-                  className="w-full bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-3 focus:border-indigo-500 text-xs text-white outline-none cursor-pointer"
-                >
-                  <option className="text-black bg-white" value="Rigid Coach">Rigid Coach 🧗</option>
-                  <option className="text-black bg-white" value="Friendly Advisor">Friendly Advisor 🌱</option>
-                  <option className="text-black bg-white" value="Direct Execution">Direct Execution 🎯</option>
-                </select>
-              </div>
-            </div>
+  {/* Deadline */}
+  <div className="space-y-1.5 col-span-1">
+    <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest pl-1 select-none">
+      Target Deadline
+    </label>
+
+    {(() => {
+      const [y, m, d] = deadline.split("-");
+
+      const year = y || "2026";
+      const month = m || "06";
+
+      // safe max days for selected month/year
+      const maxDays = new Date(Number(year), Number(month), 0).getDate();
+
+      const safeDay = Math.min(Number(d || 1), maxDays)
+        .toString()
+        .padStart(2, "0");
+
+      return (
+        <div className="flex gap-1">
+
+          {/* MONTH */}
+          <select
+            value={month}
+            aria-label="Deadline Month"
+            onChange={(e) => {
+              const newMonth = e.target.value;
+              const parts = deadline.split("-");
+              parts[1] = newMonth;
+
+              const max = new Date(
+                Number(parts[0]),
+                Number(newMonth),
+                0
+              ).getDate();
+
+              const safeD = Math.min(Number(parts[2] || 1), max)
+                .toString()
+                .padStart(2, "0");
+
+              setDeadline(`${parts[0]}-${newMonth}-${safeD}`);
+            }}
+            className="flex-1 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1.5 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer"
+          >
+            <option value="01">Jan</option>
+            <option value="02">Feb</option>
+            <option value="03">Mar</option>
+            <option value="04">Apr</option>
+            <option value="05">May</option>
+            <option value="06">Jun</option>
+            <option value="07">Jul</option>
+            <option value="08">Aug</option>
+            <option value="09">Sep</option>
+            <option value="10">Oct</option>
+            <option value="11">Nov</option>
+            <option value="12">Dec</option>
+          </select>
+
+          {/* DAY (DYNAMIC SAFE RANGE) */}
+          <select
+            value={safeDay}
+            aria-label="Deadline Day"
+            onChange={(e) => {
+              const parts = deadline.split("-");
+              parts[2] = e.target.value;
+              setDeadline(parts.join("-"));
+            }}
+            className="w-14 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer text-center"
+          >
+            {Array.from({ length: maxDays }, (_, i) => {
+              const val = (i + 1).toString().padStart(2, "0");
+              return (
+                <option key={val} value={val}>
+                  {val}
+                </option>
+              );
+            })}
+          </select>
+
+          {/* YEAR */}
+          <select
+            value={year}
+            aria-label="Deadline Year"
+            onChange={(e) => {
+              const parts = deadline.split("-");
+              parts[0] = e.target.value;
+              setDeadline(parts.join("-"));
+            }}
+            className="w-16 bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-1 focus:border-indigo-500 text-[11px] text-white outline-none cursor-pointer text-center"
+          >
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+          </select>
+
+        </div>
+      );
+    })()}
+  </div>
+
+  {/* Tone style */}
+  <div className="space-y-1.5">
+    <label className="text-xs font-semibold text-gray-400 uppercase tracking-widest pl-1">
+      Academic Tone
+    </label>
+
+    <select
+      value={academicTone}
+      onChange={(e) => setAcademicTone(e.target.value)}
+      className="w-full bg-[#090b1e]/80 border border-[#1e244b] rounded-xl py-2.5 px-3 focus:border-indigo-500 text-xs text-white outline-none cursor-pointer"
+    >
+      <option value="Rigid Coach">Rigid Coach 🧗</option>
+      <option value="Friendly Advisor">Friendly Advisor 🌱</option>
+      <option value="Direct Execution">Direct Execution 🎯</option>
+    </select>
+  </div>
+
+</div>
 
             {/* Grid for Level & Commitment */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
