@@ -57,7 +57,7 @@ The project architecture also includes integration points for Google Calendar an
 ## 🌐 Live Demo
 
 **Deployed Application:**  
-PASTE YOUR CLOUD RUN URL HERE
+https://deadline-guardian-587540869586.asia-south1.run.app/
 
 ---
 
