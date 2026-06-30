@@ -832,30 +832,7 @@ export default function AIPlannerView({
                   </select>
                 </div>
                 
-                {/* Micro presets below */}
-                <div className="flex flex-wrap gap-1 mt-1 pb-1">
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-06-25")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-06-25" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jun 25
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-06-30")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-06-30" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jun 30
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDeadline("2026-07-15")}
-                    className={`text-[9px] px-1.5 py-0.5 rounded bg-[#1e244b]/55 hover:bg-[#1e244b] transition-colors border ${deadline === "2026-07-15" ? "border-indigo-400 text-indigo-300" : "border-transparent text-gray-400"}`}
-                  >
-                    Jul 15
-                  </button>
-                </div>
+                
               </div>
 
               {/* Tone style */}
