@@ -871,8 +871,8 @@ export default function AIPlannerView({
                     <option className="text-black bg-white" value="2028">2028</option>
                   </select>
                 </div>
-              </div>   
-            
+                
+                
 
               {/* Tone style */}
               <div className="space-y-1.5">

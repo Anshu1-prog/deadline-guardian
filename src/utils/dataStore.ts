@@ -1,17 +1,144 @@
 import { Task, AIPlan, UserProfile, PriorityLevel } from "../types";
 
-export const INITIAL_TASKS: Task[] = [];
+export const INITIAL_TASKS: Task[] = [
+  {
+    id: "demo-task-1",
+    title: "Learn Data Structures",
+    description: "Understand arrays, linked lists, stacks, queues, trees, and graph algorithms. Solve key algorithmic problems.",
+    dueDate: "2026-06-30",
+    category: "Coding",
+    priority: "High",
+    completed: false,
+    planId: "demo-plan-1",
+    durationHours: 10.0
+  },
+  {
+    id: "demo-task-2",
+    title: "Web Dev Project",
+    description: "Build an interactive replica with clean UI assets, custom states, transition animations, and a rich database synchronization layer.",
+    dueDate: "2026-07-10",
+    category: "Project",
+    priority: "Medium",
+    completed: true,
+    durationHours: 12.0
+  },
+  {
+    id: "demo-task-3",
+    title: "Maths Revision",
+    description: "Review discrete math fundamentals, combinatorics formulas, probability distributions, and matrices properties.",
+    dueDate: "2026-07-15",
+    category: "Academics",
+    priority: "Low",
+    completed: true,
+    durationHours: 6.0
+  },
+  {
+    id: "demo-task-4",
+    title: "Design System Spec",
+    description: "Document Figma components tokens, color palettes, dark mode shades, and layout modular templates.",
+    dueDate: "2026-06-25",
+    category: "Design",
+    priority: "Medium",
+    completed: true,
+    durationHours: 4.5
+  },
+  {
+    id: "demo-task-5",
+    title: "Prepare Slide Deck",
+    description: "Iterate over technical architecture slides for the final semester presentation deck.",
+    dueDate: "2026-06-28",
+    category: "Academics",
+    priority: "High",
+    completed: false,
+    durationHours: 3.0
+  }
+];
 
-export const INITIAL_PLAN: AIPlan | null = null;
+export const INITIAL_PLAN: AIPlan = {
+  id: "demo-plan-1",
+  planName: "Learn Data Structures",
+  objective: "Learn Data Structures",
+  targetDeadline: "2026-06-30",
+  steps: [
+    {
+      id: "step-1",
+      title: "Understand Basics",
+      description: "Go through fundamentals, watch videos, take notes.",
+      durationHours: 2.0
+    },
+    {
+      id: "step-2",
+      title: "Practice Problems (Easy)",
+      description: "Solve easy problems, build intuition.",
+      durationHours: 2.5
+    },
+    {
+      id: "step-3",
+      title: "Practice Problems (Medium)",
+      description: "Solve medium problems, analyze patterns.",
+      durationHours: 3.0
+    },
+    {
+      id: "step-4",
+      title: "Revision + Mock Test",
+      description: "Revise concepts, give mock test.",
+      durationHours: 2.0
+    }
+  ],
+  estimatedTotalHours: 9.5,
+  createdAt: "2026-06-23T08:00:00Z",
+  applied: true
+};
 
 export const INITIAL_PROFILE: UserProfile = {
-  name: "",
-  avatarSeed: "default",
-  streak: 0,
-  focusScore: 0,
-  dailyWorkHours: 0,
-  joinedDate: new Date().toISOString().split("T")[0],
+  name: "User",
+  avatarSeed: "guardian-avatar",
+  streak: 5,
+  focusScore: 87,
+  dailyWorkHours: 6,
+  joinedDate: "2026-06-01"
 };
+
+class SafeLocalStorage {
+  private memoryStore: Record<string, string> = {};
+
+  getItem(key: string): string | null {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        return window.localStorage.getItem(key);
+      }
+    } catch (e) {
+      console.warn("localStorage.getItem blocked or unavailable:", e);
+    }
+    return this.memoryStore[key] || null;
+  }
+
+  setItem(key: string, value: string): void {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        window.localStorage.setItem(key, value);
+        return;
+      }
+    } catch (e) {
+      console.warn("localStorage.setItem blocked or unavailable:", e);
+    }
+    this.memoryStore[key] = value;
+  }
+
+  removeItem(key: string): void {
+    try {
+      if (typeof window !== "undefined" && window.localStorage) {
+        window.localStorage.removeItem(key);
+        return;
+      }
+    } catch (e) {
+      console.warn("localStorage.removeItem blocked or unavailable:", e);
+    }
+    delete this.memoryStore[key];
+  }
+}
+
+const safeStorage = new SafeLocalStorage();
 
 // Local storage key names
 const STORAGE_KEYS = {
@@ -25,11 +152,11 @@ export function loadTasks(): Task[] {
   try {
     const data = safeStorage.getItem(STORAGE_KEYS.TASKS);
     let loaded: Task[] = [];
-   if (data) {
-  loaded = JSON.parse(data);
-} else {
-  loaded = [];
-}
+    if (data) {
+      loaded = JSON.parse(data);
+    } else {
+      loaded = INITIAL_TASKS;
+    }
     // Update priorities dynamically based on deadline
     return loaded.map(t => ({
       ...t,
